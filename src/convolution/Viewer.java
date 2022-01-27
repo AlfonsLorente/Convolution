@@ -5,10 +5,12 @@
  */
 package convolution;
 
+import javax.swing.JPanel;
+
 /**
  *
  * @author alfon
  */
-public class Viewer {
+public class Viewer extends JPanel{
     
 }
