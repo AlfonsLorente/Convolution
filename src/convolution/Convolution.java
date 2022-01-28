@@ -19,6 +19,9 @@ public class Convolution extends BufferedImage{
     private int[][] kernel;
     private int width;
     private int height;
+    private boolean modRed = true;
+    private boolean modGreen = true;
+    private boolean modBlue = true;
     
     
     Convolution(BufferedImage bufferedImage){
@@ -36,11 +39,9 @@ public class Convolution extends BufferedImage{
             {0, -1, 0}
         };
         
-        for(int i = 1; i < width-1; i++){
-            for(int j = 1; j < height-1; j++){
-                
-            }
-        }
+        applyConvolution();
+        
+        
         
         
         
@@ -52,6 +53,23 @@ public class Convolution extends BufferedImage{
             }
          }
     }
+
+    private void applyConvolution() {
+        for(int i = 1; i < width-1; i++){
+            for(int j = 1; j < height-1; j++){
+                evolveColor(i, j);
+            }
+        }
+    }
+
+    private void evolveColor(int i, int j) {
+        
+        
+    }
+
+
+
+
     
     
     
