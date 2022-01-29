@@ -8,7 +8,14 @@ package convolution;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -17,15 +24,25 @@ import javax.swing.JFrame;
 public class Main extends JFrame{
 
     private GridBagConstraints constraints = new GridBagConstraints(); 
-    
+    private BufferedImage image;
+    private BufferedImage convolutedImage;
+    private Convolution convolution;    
+    private Viewer viewer;
     
     public static void main(String[] args) {
         new Main();
     }
     
     
-    Main(){
+    public Main(){
         setMainFrame();
+        setUpImages();
+        viewer = new Viewer();
+        viewer.setImage(image);
+        viewer.setConvolutedImage(convolutedImage);
+        
+        this.add(viewer);
+
         this.setVisible(true);
         
         
@@ -34,7 +51,7 @@ public class Main extends JFrame{
     private void setMainFrame() {
         this.setTitle("ConvolutionTransform");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout (null);
+        //this.setLayout (null);
         this.setBounds(0, 0, 1360, 790);
         this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         //this.setResizable(false);        
@@ -60,6 +77,18 @@ public class Main extends JFrame{
         //Add the control panel with the contraints.
         //is.add (controlPanel, constraints);
 
+    }
+
+    private void setUpImages() {
+        try {
+            image = ImageIO.read(new File("IMG/taking_photo.png"));
+        } catch (IOException ex) {
+            Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        convolution = new Convolution(image, Convolution.Type.BLUR, true, true, true);
+        convolutedImage = convolution.getConvolutedImage();
+        
+        
     }
     
     

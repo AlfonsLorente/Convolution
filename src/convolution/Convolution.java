@@ -21,8 +21,15 @@ public class Convolution{
     private int[][] blueList;
     private int[][] alphaList;
     
-    private int[][] kernel;
-    private int kernelSum = 0;
+    private int[][] convolutedRedList;
+    private int[][] convolutedGreenList;
+    private int[][] convolutedBlueList;
+    private int[][] convolutedAlphaList;
+    
+    
+    
+    private float[][] kernel;
+    private float kernelDiv = 0;
 
     private int width;
     private int height;
@@ -32,23 +39,42 @@ public class Convolution{
     public static final int RED = 0;
     public static final int GREEN = 1;
     public static final int BLUE = 2;
+    private Type type;
 
 
+    
     enum Type{
-        SHARPENING
+        SHARPENING,
+        SMOOTHING,
+        RAISED,
+        OUTLINE,
+        EMBOSS,
+        BLUR
     }
     
     
     public Convolution(BufferedImage image, Type type, boolean modRed, boolean modGreen, boolean modBlue){
         this.image = image;
-        width = image.getWidth();
-        height = image.getHeight();
-        convolutedImage = new BufferedImage(width-2, height-2, image.getType());
-        redList = new int[width][height];
-        greenList = new int[width][height];
-        blueList = new int[width][height];
-        alphaList = new int[width][height];
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+        this.convolutedImage = new BufferedImage(width-2, height-2, image.getType());
+        this.modRed = modRed;
+        this.modGreen = modGreen;
+        this.modBlue = modBlue;
+
+        this.redList = new int[width][height];
+        this.greenList = new int[width][height];
+        this.blueList = new int[width][height];
+        this.alphaList = new int[width][height];
+        
+        this.convolutedRedList = new int[width-2][height-2];
+        this.convolutedGreenList = new int[width-2][height-2];
+        this.convolutedBlueList = new int[width-2][height-2];
+        
         fillColorLists();
+        this.type = type;
+        
+        startConvolution();
         
         
     }
@@ -62,16 +88,105 @@ public class Convolution{
     }
     
     
-    private void sharpening(){
-        kernel = new int[][] {
+    
+
+    
+    public void blur(){
+        kernel = new float[][] {
+            {2, 1, 2},
+            {1, -1, 1},
+            {2, 1, 2}
+        };
+        kernelDiv = 11;
+        applyConvolution();
+    }
+    
+    public void sharpening(){
+        kernel = new float[][] {
             {0, -1, 0},
             {-1, 5, -1},
             {0, -1, 0}
         };
-        
+        kernelDiv = 1;
         applyConvolution();
     }
+    
+    public void smoothing(){
+        kernel = new float[][] {
+            {1, 2, 1},
+            {2, 4, 2},
+            {1, 2, 1}
+        };
+        kernelDiv = 16;
+        applyConvolution();
+    }
+    
+    
+    public void raised(){
+        kernel = new float[][] {
+            {0, 0, -2},
+            {0, 2, 0},
+            {1, 2, 0}
+        };
+        kernelDiv = 1;
+        applyConvolution();
+    }
+    
+    public void outline(){
+        kernel = new float[][] {
+            {-1, -1, -1},
+            {-1, 8, -1},
+            {-1, -1, -1}
+        };
+        kernelDiv = 1;
+        applyConvolution();
+    }
+    
+    
+    public void emboss(){
+        kernel = new float[][] {
+            {-2, -1, 0},
+            {-1, 1, 1},
+            {0, 1, 2}
+        };
+        kernelDiv = 1;
+        applyConvolution();
+    }
+    
+    
+        private void startConvolution() {
+        switch(type){
+            case SHARPENING:
+                sharpening();
+                break;
+                
+            case SMOOTHING:
+                smoothing();
+                break;
+              
+            case RAISED:
+                raised();
+                break;
+                
+            case OUTLINE:
+                outline();
+                break;
+                
+            case EMBOSS:
+                emboss();
+                break;
+                
+            case BLUR:
+                blur();
+                break;
+                
+                
+            default:
+                return;
+        }
+    }
 
+    
     private void fillColorLists() {
          for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
@@ -84,9 +199,10 @@ public class Convolution{
             }
          }
     }
+    
+
 
     private void applyConvolution() {
-        applyKernelSum();
         
         for(int i = 1; i < width-1; i++){
             for(int j = 1; j < height-1; j++){
@@ -96,16 +212,19 @@ public class Convolution{
                 
             }
         }
+        
+        setUpConvolutedImage();
+        
     }
 
     private void evolveColor(int i, int j, int colorMod) {
         int[][] colorList;
-        int color, pixel;
+        int color;
         if(colorMod == RED) colorList = redList;
         else if(colorMod == GREEN) colorList = greenList;
         else colorList = blueList;
         
-        color = (
+        color = Math.round((
                 (colorList[i-1][j-1]*kernel[0][0]) + 
                 (colorList[i-1][j-0]*kernel[0][1]) + 
                 (colorList[i-1][j+1]*kernel[0][2]) + 
@@ -115,31 +234,40 @@ public class Convolution{
                 (colorList[i+1][j-1]*kernel[2][0]) + 
                 (colorList[i+1][j-0]*kernel[2][1]) + 
                 (colorList[i+1][j+1]*kernel[2][2])
-                ) / kernelSum;
+                ));
+        color = Math.round(color/kernelDiv);
+        
+        
         if(color > 255) color = 255;
+        if(color < 0) color = 0;
         
-        if(colorMod == RED) pixel = (alphaList[i][j]<<24) | (color<<16) | (greenList[i][j]<<8) | blueList[i][j];
-        else if(colorMod == GREEN) pixel = (alphaList[i][j]<<24) | (redList[i][j]<<16) | (color<<8) | blueList[i][j];
-        else pixel = (alphaList[i][j]<<24) | (redList[i][j]<<16) | (greenList[i][j]<<8) | blueList[i][j];
-        convolutedImage.setRGB(i-1, j-1, pixel);
+        
+        
+        if(colorMod == RED) convolutedRedList[i-1][j-1] = color;
+        else if(colorMod == GREEN) convolutedGreenList[i-1][j-1] = color;
+        else convolutedBlueList[i-1][j-1] = color;
+        
+        
         
     }
     
-    private void applyKernelSum() {
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                kernelSum += kernel[i][j];
+        
+    
+    
+
+    
+        private void setUpConvolutedImage() {
+            int pixel;
+            for(int i = 0; i < width-2; i++){
+                for(int j = 0; j < height-2; j++){
+                    pixel = (alphaList[i][j]<<24) | (convolutedRedList[i][j]<<16) | (convolutedGreenList[i][j]<<8) | convolutedBlueList[i][j];
+                    convolutedImage.setRGB(i, j, pixel);
+
+                }
             }
-        }
-        if (kernelSum < 1) kernelSum = 1;
-        
+            
+            
     }
 
-
-
-
-    
-    
-    
     
 }
