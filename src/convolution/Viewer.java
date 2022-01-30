@@ -57,19 +57,10 @@ public class Viewer extends JPanel implements Runnable{
     public void paint(){
         //The buffered strategy trys to prevent flickering
         //Uses the buffered strategy
-        BufferStrategy bs = this.getBufferStrategy();
-        Graphics g = bs.getDrawGraphics();
-        if (bs==null){
-            return;
-        }
-        if (g==null){
-            return;
-        }
-        g = bs.getDrawGraphics();
+
         setUpRawImage();
         setUpConvolutedImage();
-        bs.show();
-        g.dispose();
+
     }
 
 
@@ -105,8 +96,7 @@ public class Viewer extends JPanel implements Runnable{
             } catch (InterruptedException ex) {
                 Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            createBufferStrategy(2);
-            
+
         }
     }
     
