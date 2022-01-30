@@ -24,7 +24,6 @@ public class Convolution{
     private int[][] convolutedRedList;
     private int[][] convolutedGreenList;
     private int[][] convolutedBlueList;
-    private int[][] convolutedAlphaList;
     
     
     
@@ -44,9 +43,9 @@ public class Convolution{
 
     
     enum Type{
-        SHARPENING,
-        SMOOTHING,
-        RAISED,
+        SHARPEN,
+        SMOOTH,
+        RAISE,
         OUTLINE,
         EMBOSS,
         BLUR
@@ -156,15 +155,15 @@ public class Convolution{
     
         private void startConvolution() {
         switch(type){
-            case SHARPENING:
+            case SHARPEN:
                 sharpening();
                 break;
                 
-            case SMOOTHING:
+            case SMOOTH:
                 smoothing();
                 break;
               
-            case RAISED:
+            case RAISE:
                 raised();
                 break;
                 
@@ -252,22 +251,22 @@ public class Convolution{
     }
     
         
-    
-    
+    private void setUpConvolutedImage() {
+        int pixel;
+        for (int i = 0; i < width - 2; i++) {
+            for (int j = 0; j < height - 2; j++) {
+                pixel = (alphaList[i][j] << 24) | (convolutedRedList[i][j] << 16) | (convolutedGreenList[i][j] << 8) | convolutedBlueList[i][j];
+                convolutedImage.setRGB(i, j, pixel);
 
-    
-        private void setUpConvolutedImage() {
-            int pixel;
-            for(int i = 0; i < width-2; i++){
-                for(int j = 0; j < height-2; j++){
-                    pixel = (alphaList[i][j]<<24) | (convolutedRedList[i][j]<<16) | (convolutedGreenList[i][j]<<8) | convolutedBlueList[i][j];
-                    convolutedImage.setRGB(i, j, pixel);
-
-                }
             }
-            
-            
+        }
+
     }
+    
+    
+ 
+        
+        
 
     
 }
