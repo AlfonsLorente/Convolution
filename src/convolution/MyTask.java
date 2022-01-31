@@ -39,21 +39,17 @@ public class MyTask extends JFrame {
         setMainFrame();
         setUpImages();
         setUpViewer();
-        
+
         controlPanel = new ControlPanel();
         controlPanel.setMain(this);
         setGridRules();
         this.setVisible(true);
-        
-        
 
     }
 
     public void setConvType(Convolution.Type convType) {
         this.convType = convType;
     }
-    
-    
 
     public Viewer getViewer() {
         return viewer;
@@ -75,8 +71,6 @@ public class MyTask extends JFrame {
         addViewer();
         addControlPanel();
 
-        
-
     }
 
     private void setUpImages() {
@@ -85,16 +79,15 @@ public class MyTask extends JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        convolution = new Convolution(image, convType, true, true, true);
+        convolution = new Convolution(image, convType, true, false, false);
         convolutedImage = convolution.getConvolutedImage();
 
     }
-    
-    
-    public void changeConvolutedImage(Convolution.Type newType){
+
+    public void changeConvolutedImage(Convolution.Type newType) {
         if (!convType.equals(newType)) {
             convType = newType;
-            convolution = new Convolution(image, convType, true, true, true);
+            convolution = new Convolution(image, convType, true, false, false);
             convolutedImage = convolution.getConvolutedImage();
             this.remove(viewer);
             setUpViewer();
@@ -102,7 +95,7 @@ public class MyTask extends JFrame {
             viewer.setConvolutedImage(convolutedImage);
             viewer.revalidate();
             System.out.println(convType);
-            
+
         }
     }
 
@@ -119,7 +112,7 @@ public class MyTask extends JFrame {
 
     private void addControlPanel() {
         GridBagConstraints constraints = new GridBagConstraints();
-       //Set the constraints up for the control panel
+        //Set the constraints up for the control panel
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 0;
