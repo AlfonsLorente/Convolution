@@ -114,7 +114,7 @@ public class ControlPanel extends JPanel implements ActionListener{
     //stopSetUp
     private void convoluterSetUp() {
         setConvolutionList();
-       // setconvolutionButton();
+       
        
         
         
@@ -155,39 +155,6 @@ public class ControlPanel extends JPanel implements ActionListener{
         i6.addActionListener(this);
         
     }
-/*
-    private void setconvolutionButton() {
-
-        //Declare the grid bag constraints
-        GridBagConstraints constraints = new GridBagConstraints();  
-        
-        //set up stop
-        convolutionButton = new JButton("CONVOLUTE");
-        convolutionButton.setBorderPainted(true);
-        convolutionButton.setFocusPainted(false);
-        convolutionButton.setContentAreaFilled(true);
-        convolutionButton.setBackground(Color.WHITE);
-        convolutionButton.setForeground(Color.BLACK);
-        convolutionButton.setBorder(compound);
-        
-        
-        //set up constraints
-        constraints.gridx = 1; 
-        constraints.gridy = 1; 
-        constraints.weightx = 1;
-        constraints.weighty = 0.1;
-        constraints.gridwidth = 1;
-        this.add(convolutionButton , constraints);
-        //add the button listener
-        convolutionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-    }
-        
-*/
 
     @Override
     public void actionPerformed(ActionEvent e) {

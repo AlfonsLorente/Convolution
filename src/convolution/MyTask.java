@@ -38,9 +38,8 @@ public class MyTask extends JFrame {
     public MyTask() {
         setMainFrame();
         setUpImages();
-        viewer = new Viewer();
-        viewer.setImage(image);
-        viewer.setConvolutedImage(convolutedImage);
+        setUpViewer();
+        
         controlPanel = new ControlPanel();
         controlPanel.setMain(this);
         setGridRules();
@@ -94,17 +93,17 @@ public class MyTask extends JFrame {
     
     public void changeConvolutedImage(Convolution.Type newType){
         if (!convType.equals(newType)) {
-                convType = newType;
-                convolution = new Convolution(image, convType, true, true, true);
-                convolutedImage = convolution.getConvolutedImage();
-                this.remove(viewer);
-                viewer = new Viewer();
-                viewer.setImage(image);
-                viewer.setConvolutedImage(convolutedImage);
-                viewer.setConvolutedImage(convolutedImage);
-                addViewer();
-                System.out.println(convType);
-            }
+            convType = newType;
+            convolution = new Convolution(image, convType, true, true, true);
+            convolutedImage = convolution.getConvolutedImage();
+            this.remove(viewer);
+            setUpViewer();
+            addViewer();
+            viewer.setConvolutedImage(convolutedImage);
+            viewer.revalidate();
+            System.out.println(convType);
+            
+        }
     }
 
     private void addViewer() {
@@ -129,6 +128,12 @@ public class MyTask extends JFrame {
 
         //Add the control panel with the contraints.
         this.add(controlPanel, constraints);
+    }
+
+    private void setUpViewer() {
+        viewer = new Viewer();
+        viewer.setImage(image);
+        viewer.setConvolutedImage(convolutedImage);
     }
 
 }
