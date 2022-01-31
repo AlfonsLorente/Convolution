@@ -29,8 +29,9 @@ public class MyTask extends JFrame {
     private Convolution convolution;
     private Viewer viewer;
     private ControlPanel controlPanel;
-    private Convolution.Type convType = Convolution.Type.SMOOTH;
-
+    private Convolution.Type convType = Convolution.Type.EMBOSS;
+    private boolean redState = true, greenState = true, blueState = true;
+    
     public static void main(String[] args) {
         new MyTask();
     }
@@ -47,9 +48,6 @@ public class MyTask extends JFrame {
 
     }
 
-    public void setConvType(Convolution.Type convType) {
-        this.convType = convType;
-    }
 
     public Viewer getViewer() {
         return viewer;
@@ -79,7 +77,7 @@ public class MyTask extends JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        convolution = new Convolution(image, convType, true, false, false);
+        convolution = new Convolution(image, convType, redState, greenState, blueState);
         convolutedImage = convolution.getConvolutedImage();
 
     }
@@ -87,7 +85,7 @@ public class MyTask extends JFrame {
     public void changeConvolutedImage(Convolution.Type newType) {
         if (!convType.equals(newType)) {
             convType = newType;
-            convolution = new Convolution(image, convType, true, false, false);
+            convolution = new Convolution(image, convType, redState, greenState, blueState);
             convolutedImage = convolution.getConvolutedImage();
             this.remove(viewer);
             setUpViewer();
@@ -97,6 +95,27 @@ public class MyTask extends JFrame {
             System.out.println(convType);
 
         }
+    }
+    
+    public void changeConvolutedImage(String colorName , boolean colorState) {
+        if(colorName.equals("red")){
+            redState = colorState;
+        }
+        else if(colorName.equals("green")){
+            greenState = colorState;
+        }else if(colorName.equals("blue")){
+            blueState = colorState;
+        }
+            
+        convolution = new Convolution(image, convType, redState, greenState, blueState);        
+        convolutedImage = convolution.getConvolutedImage();
+        this.remove(viewer);
+        setUpViewer();
+        addViewer();
+        viewer.setConvolutedImage(convolutedImage);
+        viewer.revalidate();
+        System.out.println(convType);
+
     }
 
     private void addViewer() {

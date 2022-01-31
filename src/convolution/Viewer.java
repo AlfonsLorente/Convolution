@@ -19,19 +19,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 /**
  *
  * @author alfon
  */
-public class Viewer extends JPanel {
-
+public class Viewer extends JPanel{
     private BufferedImage image;
     private BufferedImage convolutedImage;
-
-    public Viewer() {
+    
+    public Viewer(){
         this.setBackground(Color.black);
         this.setLayout(new GridBagLayout());
-
+        
+        
+        
     }
 
     public BufferedImage getImage() {
@@ -51,38 +53,44 @@ public class Viewer extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paint(Graphics g) {
+        super.paint(g); 
         setUpRawImage();
         setUpConvolutedImage();
-
+        
     }
+    
+    
+
+
 
     private void setUpRawImage() {
-        GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints constraints = new GridBagConstraints(); 
         JLabel rawImageLabel = new JLabel(new ImageIcon(image));
-        constraints.gridx = 0;
-        constraints.gridy = 0;
+        constraints.gridx = 0; 
+        constraints.gridy = 0; 
         constraints.weightx = 1;
         constraints.weighty = 0.05;
         constraints.gridwidth = 1;
         add(rawImageLabel, constraints);
-
+        
     }
-
+    
     private void setUpConvolutedImage() {
-        GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints constraints = new GridBagConstraints(); 
         JLabel convolutedImageLabel = new JLabel(new ImageIcon(convolutedImage));
-        constraints.gridx = 1;
-        constraints.gridy = 0;
+        constraints.gridx = 1; 
+        constraints.gridy = 0; 
         constraints.weightx = 1;
         constraints.weighty = 0.05;
         constraints.gridwidth = 1;
         add(convolutedImageLabel, constraints);
-
+        
     }
-
-    /* @Override
+    
+    
+        
+   /* @Override
     public void run() {
         while(true){
             try {
@@ -93,4 +101,5 @@ public class Viewer extends JPanel {
 
         }
     }*/
+    
 }

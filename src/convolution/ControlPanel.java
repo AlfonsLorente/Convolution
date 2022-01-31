@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -34,6 +37,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 /**
  *
@@ -43,15 +47,17 @@ public class ControlPanel extends JPanel implements ActionListener {
 
     //DECLARE VARIABLES
     private JButton convolutionButton;
-    private JLabel title;
+    private JLabel title, colorChooserLabel;
     private JMenu convolutionMenu;
     private JMenuItem i1, i2, i3, i4, i5, i6;
     private JMenuBar convolutionMenuBar = new JMenuBar();
-    private MyTask main;
+    private MyTask myTask;
     private Border line = new LineBorder(Color.RED);
     private Border margin = new EmptyBorder(5, 15, 5, 15);
     private Border compound = new CompoundBorder(line, margin);
     private BufferedImage bufferedImage;
+    private JCheckBox redCheckbox, greenCheckbox, blueCheckbox;
+    
 
     //CONSTRUCTOR
     public ControlPanel() {
@@ -65,8 +71,8 @@ public class ControlPanel extends JPanel implements ActionListener {
 
     //PUBLIC METHODS
     //Getters and setters
-    public void setMain(MyTask main) {
-        this.main = main;
+    public void setMain(MyTask myTask) {
+        this.myTask = myTask;
     }
 
     //PROTECTED METHODS
@@ -100,9 +106,9 @@ public class ControlPanel extends JPanel implements ActionListener {
         //set up constraints
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 0.1;
-        constraints.gridwidth = 2;
+        constraints.weightx = 0.1;
+        constraints.weighty = 1;
+        constraints.gridwidth = 3;
         //set the title
         this.add(title, constraints);
     }
@@ -135,8 +141,8 @@ public class ControlPanel extends JPanel implements ActionListener {
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.weightx = 1;
-        constraints.weighty = 0.1;
-        constraints.gridwidth = 1;
+        constraints.weighty = 1;
+        constraints.gridwidth = 3;
         this.add(convolutionMenuBar, constraints);
 
         i1.addActionListener(this);
@@ -151,28 +157,97 @@ public class ControlPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Sharpen")) {
-            main.changeConvolutedImage(Convolution.Type.SHARPEN);
+            myTask.changeConvolutedImage(Convolution.Type.SHARPEN);
 
         } else if (e.getActionCommand().equals("Smooth")) {
-            main.changeConvolutedImage(Convolution.Type.SMOOTH);
+            myTask.changeConvolutedImage(Convolution.Type.SMOOTH);
 
         } else if (e.getActionCommand().equals("Raise")) {
-            main.changeConvolutedImage(Convolution.Type.RAISE);
+            myTask.changeConvolutedImage(Convolution.Type.RAISE);
 
         } else if (e.getActionCommand().equals("Outline")) {
-            main.changeConvolutedImage(Convolution.Type.OUTLINE);
+            myTask.changeConvolutedImage(Convolution.Type.OUTLINE);
 
         } else if (e.getActionCommand().equals("Emboss")) {
-            main.changeConvolutedImage(Convolution.Type.EMBOSS);
+            myTask.changeConvolutedImage(Convolution.Type.EMBOSS);
 
         } else if (e.getActionCommand().equals("Blur")) {
-            main.changeConvolutedImage(Convolution.Type.BLUR);
+            myTask.changeConvolutedImage(Convolution.Type.BLUR);
 
         }
     }
 
     private void setConvolutionColor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        GridBagConstraints cLabel = new GridBagConstraints();
+        colorChooserLabel = new JLabel("Colors to convolute");
+        colorChooserLabel.setForeground(Color.white);
+        //set up constraints
+        cLabel.gridx = 0;
+        cLabel.gridy = 2;
+        cLabel.weightx = 0.1;
+        cLabel.weighty = 0.2;
+        cLabel.gridwidth = 3;
+        this.add(colorChooserLabel, cLabel);
+        
+        GridBagConstraints cCheckBox = new GridBagConstraints();
+        redCheckbox = new JCheckBox("Red");
+        redCheckbox.setBackground(null);
+        redCheckbox.setForeground(Color.WHITE);
+        redCheckbox.setSelected(true);
+        
+        //set up constraints
+        cCheckBox.gridx = 0;
+        cCheckBox.gridy = 3;
+        cCheckBox.weightx = 0.1;
+        cCheckBox.weighty = 0.3;
+        this.add(redCheckbox, cCheckBox);
+        redCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == 1){
+                    myTask.changeConvolutedImage("red", true);
+                }else{
+                    myTask.changeConvolutedImage("red", false);
+
+                }
+            }
+        });
+        
+        greenCheckbox = new JCheckBox("Green");
+        greenCheckbox.setBackground(null);
+        greenCheckbox.setForeground(Color.WHITE);
+        greenCheckbox.setSelected(true);
+        cCheckBox.gridx = 1;
+        this.add(greenCheckbox, cCheckBox);
+        greenCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == 1){
+                    myTask.changeConvolutedImage("green", true);
+                }else{
+                    myTask.changeConvolutedImage("green", false);
+
+                }
+            }
+        });
+
+        blueCheckbox = new JCheckBox("Blue");
+        blueCheckbox.setBackground(null);
+        blueCheckbox.setForeground(Color.WHITE);
+        blueCheckbox.setSelected(true);
+        cCheckBox.gridx = 2;
+        this.add(blueCheckbox, cCheckBox);
+        blueCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == 1){
+                    myTask.changeConvolutedImage("blue", true);
+                }else{
+                    myTask.changeConvolutedImage("blue", false);
+
+                }
+            }
+        });
     }
 
 }
