@@ -24,7 +24,7 @@ import javax.swing.JPanel;
  *
  * @author alfon
  */
-public class Viewer extends JPanel implements Runnable{
+public class Viewer extends JPanel{
     private BufferedImage image;
     private BufferedImage convolutedImage;
     
@@ -51,17 +51,17 @@ public class Viewer extends JPanel implements Runnable{
     public void setConvolutedImage(BufferedImage convolutedImage) {
         this.convolutedImage = convolutedImage;
     }
-    
-    
 
-    public void paint(){
-        //The buffered strategy trys to prevent flickering
-        //Uses the buffered strategy
-
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g); 
         setUpRawImage();
         setUpConvolutedImage();
-
+        
     }
+    
+    
+
 
 
     private void setUpRawImage() {
@@ -87,8 +87,10 @@ public class Viewer extends JPanel implements Runnable{
         add(convolutedImageLabel, constraints);
         
     }
-
-    @Override
+    
+    
+        
+   /* @Override
     public void run() {
         while(true){
             try {
@@ -98,6 +100,6 @@ public class Viewer extends JPanel implements Runnable{
             }
 
         }
-    }
+    }*/
     
 }

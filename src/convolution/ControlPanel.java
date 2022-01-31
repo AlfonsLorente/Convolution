@@ -46,7 +46,7 @@ public class ControlPanel extends JPanel implements ActionListener{
     private JMenu convolutionMenu;
     private JMenuItem i1, i2, i3, i4, i5, i6;
     private JMenuBar convolutionMenuBar =new JMenuBar();  
-    private Main main;
+    private MyTask main;
     private Border line = new LineBorder(Color.RED);
     private Border margin = new EmptyBorder(5, 15, 5, 15);
     private Border compound = new CompoundBorder(line, margin);
@@ -68,7 +68,7 @@ public class ControlPanel extends JPanel implements ActionListener{
     
     //PUBLIC METHODS
     //Getters and setters
-    public void setMain(Main main) {
+    public void setMain(MyTask main) {
         this.main = main;
     }
     
@@ -192,24 +192,24 @@ public class ControlPanel extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("Sharpen")){
-            main.setConvType(Convolution.Type.SHARPEN);
+            main.changeConvolutedImage(Convolution.Type.SHARPEN);
             
             
         }else if(e.getActionCommand().equals("Smooth")){
-            main.setConvType(Convolution.Type.SMOOTH);
+            main.changeConvolutedImage(Convolution.Type.SMOOTH);
             
         }else if(e.getActionCommand().equals("Raise")){
-            main.setConvType(Convolution.Type.RAISE);
+            main.changeConvolutedImage(Convolution.Type.RAISE);
             
             
         }else if(e.getActionCommand().equals("Outline")){
-            main.setConvType(Convolution.Type.OUTLINE);
+            main.changeConvolutedImage(Convolution.Type.OUTLINE);
             
         }else if(e.getActionCommand().equals("Emboss")){
-            main.setConvType(Convolution.Type.EMBOSS);
+            main.changeConvolutedImage(Convolution.Type.EMBOSS);
             
         }else if(e.getActionCommand().equals("Blur")){
-            main.setConvType(Convolution.Type.BLUR);
+            main.changeConvolutedImage(Convolution.Type.BLUR);
             
         }
     }

@@ -22,9 +22,8 @@ import javax.swing.JPanel;
  *
  * @author alfon
  */
-public class Main extends JFrame {
+public class MyTask extends JFrame {
 
-    private GridBagConstraints constraints = new GridBagConstraints();
     private BufferedImage image;
     private BufferedImage convolutedImage;
     private Convolution convolution;
@@ -33,10 +32,10 @@ public class Main extends JFrame {
     private Convolution.Type convType = Convolution.Type.SMOOTH;
 
     public static void main(String[] args) {
-        new Main();
+        new MyTask();
     }
 
-    public Main() {
+    public MyTask() {
         setMainFrame();
         setUpImages();
         viewer = new Viewer();
@@ -47,20 +46,7 @@ public class Main extends JFrame {
         setGridRules();
         this.setVisible(true);
         
-        Convolution.Type oldConvType = convType;
-        while (true) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (!oldConvType.equals(convType)) {
-               
-        convolution = new Convolution(image, convType, true, true, true);
-        convolutedImage = convolution.getConvolutedImage();
-        oldConvType = convType;
-            }
-        }
+        
 
     }
 
@@ -87,21 +73,10 @@ public class Main extends JFrame {
     //setGridRules: set up the gridbag layout rules
     private void setGridRules() {
         //Set the constraints up for the viewer
-        constraints.gridx = 1; // El área de texto empieza en la columna cero.
-        constraints.gridy = 0; // El área de texto empieza en la fila cero
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        constraints.fill = GridBagConstraints.BOTH;
-        //Add the viewer with the contraints.
-        this.add(viewer, constraints);
+        addViewer();
+        addControlPanel();
 
-        //Set the constraints up for the control panel
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 0;
-        constraints.weighty = 1;
-        //Add the control panel with the contraints.
-        this.add(controlPanel, constraints);
+        
 
     }
 
@@ -114,6 +89,46 @@ public class Main extends JFrame {
         convolution = new Convolution(image, convType, true, true, true);
         convolutedImage = convolution.getConvolutedImage();
 
+    }
+    
+    
+    public void changeConvolutedImage(Convolution.Type newType){
+        if (!convType.equals(newType)) {
+                convType = newType;
+                convolution = new Convolution(image, convType, true, true, true);
+                convolutedImage = convolution.getConvolutedImage();
+                this.remove(viewer);
+                viewer = new Viewer();
+                viewer.setImage(image);
+                viewer.setConvolutedImage(convolutedImage);
+                viewer.setConvolutedImage(convolutedImage);
+                addViewer();
+                System.out.println(convType);
+            }
+    }
+
+    private void addViewer() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 1; // El área de texto empieza en la columna cero.
+        constraints.gridy = 0; // El área de texto empieza en la fila cero
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+        //Add the viewer with the contraints.
+        this.add(viewer, constraints);
+    }
+
+    private void addControlPanel() {
+        GridBagConstraints constraints = new GridBagConstraints();
+       //Set the constraints up for the control panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+
+        //Add the control panel with the contraints.
+        this.add(controlPanel, constraints);
     }
 
 }
