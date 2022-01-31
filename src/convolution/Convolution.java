@@ -255,9 +255,35 @@ public class Convolution{
         int pixel;
         for (int i = 0; i < width - 2; i++) {
             for (int j = 0; j < height - 2; j++) {
-                pixel = (alphaList[i][j] << 24) | (convolutedRedList[i][j] << 16) | (convolutedGreenList[i][j] << 8) | convolutedBlueList[i][j];
-                convolutedImage.setRGB(i, j, pixel);
-
+                
+                if(modRed && modGreen && modBlue){
+                    pixel = (alphaList[i][j] << 24) | (convolutedRedList[i][j] << 16) | (convolutedGreenList[i][j] << 8) | convolutedBlueList[i][j];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
+                else if(modRed && modGreen && !modBlue){
+                    pixel = (alphaList[i][j] << 24) | (convolutedRedList[i][j] << 16) | (convolutedGreenList[i][j] << 8) | blueList[i+1][j+1];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
+                else if(modRed && !modGreen && modBlue){
+                    pixel = (alphaList[i][j] << 24) | (convolutedRedList[i][j] << 16) | (greenList[i+1][j+1] << 8) | convolutedBlueList[i][j];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
+                else if(!modRed && modGreen && modBlue){
+                    pixel = (alphaList[i][j] << 24) | (redList[i+1][j+1] << 16) | (convolutedGreenList[i][j] << 8) | convolutedBlueList[i][j];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
+                else if(modRed){
+                    pixel = (alphaList[i][j] << 24) | (convolutedRedList[i][j] << 16) | (greenList[i+1][j+1] << 8) | blueList[i+1][j+1];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
+                else if(modGreen) {
+                    pixel = (alphaList[i][j] << 24) | (redList[i+1][j+1] << 16) | (convolutedGreenList[i][j] << 8) | blueList[i+1][j+1];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
+                else if(modBlue) {
+                    pixel = (alphaList[i][j] << 24) | (redList[i+1][j+1] << 16) | (greenList[i+1][j+1] << 8) | convolutedBlueList[i][j];
+                    convolutedImage.setRGB(i, j, pixel);
+                }
             }
         }
 

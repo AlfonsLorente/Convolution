@@ -29,8 +29,10 @@ public class MyTask extends JFrame {
     private Convolution convolution;
     private Viewer viewer;
     private ControlPanel controlPanel;
-    private Convolution.Type convType = Convolution.Type.SMOOTH;
-
+    private Convolution.Type convType = Convolution.Type.EMBOSS;
+    private boolean redState = true, greenState = true, blueState = true;
+    Thread viewerThread;
+    
     public static void main(String[] args) {
         new MyTask();
     }
@@ -38,23 +40,18 @@ public class MyTask extends JFrame {
     public MyTask() {
         setMainFrame();
         setUpImages();
-        viewer = new Viewer();
-        viewer.setImage(image);
-        viewer.setConvolutedImage(convolutedImage);
+        setUpViewer();
+
         controlPanel = new ControlPanel();
         controlPanel.setMain(this);
         setGridRules();
+        viewerThread = new Thread(viewer);
+        viewerThread.start();
         this.setVisible(true);
         
         
-
     }
 
-    public void setConvType(Convolution.Type convType) {
-        this.convType = convType;
-    }
-    
-    
 
     public Viewer getViewer() {
         return viewer;
@@ -76,8 +73,6 @@ public class MyTask extends JFrame {
         addViewer();
         addControlPanel();
 
-        
-
     }
 
     private void setUpImages() {
@@ -86,25 +81,37 @@ public class MyTask extends JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        convolution = new Convolution(image, convType, true, true, true);
+        convolution = new Convolution(image, convType, redState, greenState, blueState);
         convolutedImage = convolution.getConvolutedImage();
 
     }
-    
-    
-    public void changeConvolutedImage(Convolution.Type newType){
+
+    public void changeConvolutedImage(Convolution.Type newType) {
         if (!convType.equals(newType)) {
-                convType = newType;
-                convolution = new Convolution(image, convType, true, true, true);
-                convolutedImage = convolution.getConvolutedImage();
-                this.remove(viewer);
-                viewer = new Viewer();
-                viewer.setImage(image);
-                viewer.setConvolutedImage(convolutedImage);
-                viewer.setConvolutedImage(convolutedImage);
-                addViewer();
-                System.out.println(convType);
-            }
+            convType = newType;
+            convolution = new Convolution(image, convType, redState, greenState, blueState);
+            convolutedImage = convolution.getConvolutedImage();
+            viewer.setConvolutedImage(convolutedImage);
+
+        }
+    }
+    
+    public void changeConvolutedImage(String colorName , boolean colorState) {
+        if(colorName.equals("red")){
+            redState = colorState;
+        }
+        else if(colorName.equals("green")){
+            greenState = colorState;
+        }else if(colorName.equals("blue")){
+            blueState = colorState;
+        }
+            
+        convolution = new Convolution(image, convType, redState, greenState, blueState);        
+        convolutedImage = convolution.getConvolutedImage();
+        convolution = new Convolution(image, convType, redState, greenState, blueState);
+        convolutedImage = convolution.getConvolutedImage();
+        viewer.setConvolutedImage(convolutedImage);
+
     }
 
     private void addViewer() {
@@ -120,7 +127,7 @@ public class MyTask extends JFrame {
 
     private void addControlPanel() {
         GridBagConstraints constraints = new GridBagConstraints();
-       //Set the constraints up for the control panel
+        //Set the constraints up for the control panel
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 0;
@@ -129,6 +136,12 @@ public class MyTask extends JFrame {
 
         //Add the control panel with the contraints.
         this.add(controlPanel, constraints);
+    }
+
+    private void setUpViewer() {
+        viewer = new Viewer();
+        viewer.setImage(image);
+        viewer.setConvolutedImage(convolutedImage);
     }
 
 }

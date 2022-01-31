@@ -5,10 +5,12 @@
  */
 package convolution;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,21 +21,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 /**
  *
  * @author alfon
  */
-public class Viewer extends JPanel{
+public class Viewer extends Canvas implements Runnable{
+
     private BufferedImage image;
     private BufferedImage convolutedImage;
-    
-    public Viewer(){
+
+    public Viewer() {
         this.setBackground(Color.black);
-        this.setLayout(new GridBagLayout());
-        
-        
-        
+        //this.setLayout(new GridBagLayout());
+
     }
 
     public BufferedImage getImage() {
@@ -52,54 +52,78 @@ public class Viewer extends JPanel{
         this.convolutedImage = convolutedImage;
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g); 
+   /* @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         setUpRawImage();
         setUpConvolutedImage();
+
+    }*/
+    //paint: Draw the flames and the background image
+    public void paint(){
+        //The buffered strategy trys to prevent flickering
+        //Uses the buffered strategy
+        BufferStrategy bs = this.getBufferStrategy();
+        Graphics g = bs.getDrawGraphics();
+        if (bs==null){
+            return;
+        }
+        if (g==null){
+            return;
+        }
+        g = bs.getDrawGraphics();
+        g.drawImage(image.getScaledInstance(650, -1, BufferedImage.SCALE_SMOOTH), 0, 150, this);
+        g.drawImage(convolutedImage.getScaledInstance(650, -1, BufferedImage.SCALE_SMOOTH), 600, 150, this);
         
+        bs.show();
+        g.dispose();
     }
+        
     
-    
-
-
 
     private void setUpRawImage() {
-        GridBagConstraints constraints = new GridBagConstraints(); 
+        GridBagConstraints constraints = new GridBagConstraints();
         JLabel rawImageLabel = new JLabel(new ImageIcon(image));
-        constraints.gridx = 0; 
-        constraints.gridy = 0; 
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.weighty = 0.05;
         constraints.gridwidth = 1;
-        add(rawImageLabel, constraints);
-        
+        //add(rawImageLabel, constraints);
+
     }
-    
+
     private void setUpConvolutedImage() {
-        GridBagConstraints constraints = new GridBagConstraints(); 
+        GridBagConstraints constraints = new GridBagConstraints();
         JLabel convolutedImageLabel = new JLabel(new ImageIcon(convolutedImage));
-        constraints.gridx = 1; 
-        constraints.gridy = 0; 
+        constraints.gridx = 1;
+        constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.weighty = 0.05;
         constraints.gridwidth = 1;
-        add(convolutedImageLabel, constraints);
-        
+       // add(convolutedImageLabel, constraints);
+
     }
-    
-    
-        
-   /* @Override
+
+    //run: Called by the thread, it runs the paint function
+    @Override
     public void run() {
+        //Initial sleep to prevent pair error
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //implements the buffer strategy
+        createBufferStrategy(2);
         while(true){
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
         }
-    }*/
-    
+            paint();
+        }
+    }
+
 }
