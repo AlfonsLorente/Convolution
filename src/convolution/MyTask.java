@@ -31,6 +31,7 @@ public class MyTask extends JFrame {
     private ControlPanel controlPanel;
     private Convolution.Type convType = Convolution.Type.EMBOSS;
     private boolean redState = true, greenState = true, blueState = true;
+    Thread viewerThread;
     
     public static void main(String[] args) {
         new MyTask();
@@ -44,8 +45,11 @@ public class MyTask extends JFrame {
         controlPanel = new ControlPanel();
         controlPanel.setMain(this);
         setGridRules();
+        viewerThread = new Thread(viewer);
+        viewerThread.start();
         this.setVisible(true);
-
+        
+        
     }
 
 
@@ -87,12 +91,7 @@ public class MyTask extends JFrame {
             convType = newType;
             convolution = new Convolution(image, convType, redState, greenState, blueState);
             convolutedImage = convolution.getConvolutedImage();
-            this.remove(viewer);
-            setUpViewer();
-            addViewer();
             viewer.setConvolutedImage(convolutedImage);
-            viewer.revalidate();
-            System.out.println(convType);
 
         }
     }
@@ -109,12 +108,9 @@ public class MyTask extends JFrame {
             
         convolution = new Convolution(image, convType, redState, greenState, blueState);        
         convolutedImage = convolution.getConvolutedImage();
-        this.remove(viewer);
-        setUpViewer();
-        addViewer();
+        convolution = new Convolution(image, convType, redState, greenState, blueState);
+        convolutedImage = convolution.getConvolutedImage();
         viewer.setConvolutedImage(convolutedImage);
-        viewer.revalidate();
-        System.out.println(convType);
 
     }
 
