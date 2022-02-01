@@ -86,7 +86,6 @@ public class ControlPanel extends JPanel implements ActionListener {
     //PRIVATE METHODS
     //contolPanelSetUp: sets the base of this class
     private void controlPanelSetUp() {
-
         this.setLayout(new GridBagLayout());
         this.setBackground(Color.decode("#A020F0"));
         this.setVisible(true);
@@ -120,6 +119,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 
     }
 
+    //setConvolutionList: Adds the menu of convolution types
     private void setConvolutionList() {
         GridBagConstraints constraints = new GridBagConstraints();
         convolutionMenu = new JMenu("Convolution type");
@@ -154,6 +154,7 @@ public class ControlPanel extends JPanel implements ActionListener {
 
     }
 
+    //actionPerformed: Get the menu item clicked on the convolution menu
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Sharpen")) {
@@ -177,6 +178,7 @@ public class ControlPanel extends JPanel implements ActionListener {
         }
     }
 
+    //setConvolutionColor: changes the color that will be convoluted with checkbox
     private void setConvolutionColor() {
         GridBagConstraints cLabel = new GridBagConstraints();
         colorChooserLabel = new JLabel("Colors to convolute");
