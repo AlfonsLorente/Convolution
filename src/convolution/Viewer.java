@@ -72,6 +72,8 @@ public class Viewer extends Canvas implements Runnable{
             return;
         }
         g = bs.getDrawGraphics();
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 1400, 1000);
         g.drawImage(image.getScaledInstance(650, -1, BufferedImage.SCALE_SMOOTH), 0, 150, this);
         g.drawImage(convolutedImage.getScaledInstance(650, -1, BufferedImage.SCALE_SMOOTH), 600, 150, this);
         
@@ -81,29 +83,6 @@ public class Viewer extends Canvas implements Runnable{
         
     
 
-    private void setUpRawImage() {
-        GridBagConstraints constraints = new GridBagConstraints();
-        JLabel rawImageLabel = new JLabel(new ImageIcon(image));
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 0.05;
-        constraints.gridwidth = 1;
-        //add(rawImageLabel, constraints);
-
-    }
-
-    private void setUpConvolutedImage() {
-        GridBagConstraints constraints = new GridBagConstraints();
-        JLabel convolutedImageLabel = new JLabel(new ImageIcon(convolutedImage));
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 0.05;
-        constraints.gridwidth = 1;
-       // add(convolutedImageLabel, constraints);
-
-    }
 
     //run: Called by the thread, it runs the paint function
     @Override

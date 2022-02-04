@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -37,6 +38,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
 /**
@@ -46,7 +48,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 public class ControlPanel extends JPanel implements ActionListener {
 
     //DECLARE VARIABLES
-    private JButton convolutionButton;
+    private JButton fileChooserButton;
     private JLabel title, colorChooserLabel;
     private JMenu convolutionMenu;
     private JMenuItem i1, i2, i3, i4, i5, i6;
@@ -57,6 +59,7 @@ public class ControlPanel extends JPanel implements ActionListener {
     private Border compound = new CompoundBorder(line, margin);
     private BufferedImage bufferedImage;
     private JCheckBox redCheckbox, greenCheckbox, blueCheckbox;
+    private JFileChooser fileChooser;
     
 
     //CONSTRUCTOR
@@ -65,6 +68,7 @@ public class ControlPanel extends JPanel implements ActionListener {
         //SET UP THE CONTROLPANEL
         controlPanelSetUp();
         titleSetUp();
+        fileChooserSetUp();
         convoluterSetUp();
 
     }
@@ -77,17 +81,13 @@ public class ControlPanel extends JPanel implements ActionListener {
 
     //PROTECTED METHODS
     //paintComponent: Paints the background
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(bufferedImage, 0, 0, null);
-    }
+
 
     //PRIVATE METHODS
     //contolPanelSetUp: sets the base of this class
     private void controlPanelSetUp() {
         this.setLayout(new GridBagLayout());
-        this.setBackground(Color.decode("#A020F0"));
+        this.setBackground(Color.RED.darker().darker().darker().darker());
         this.setVisible(true);
 
     }
@@ -100,8 +100,8 @@ public class ControlPanel extends JPanel implements ActionListener {
         title = new JLabel("IMAGE CONVOLUTION");
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Serif", Font.BOLD, 25));
-        title.setOpaque(true);
         title.setBackground(Color.BLACK);
+        title.setOpaque(true);
         //set up constraints
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -112,6 +112,41 @@ public class ControlPanel extends JPanel implements ActionListener {
         this.add(title, constraints);
     }
 
+    
+    private void fileChooserSetUp() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        fileChooserButton = new JButton("Choose an image");
+        fileChooserButton.setBorderPainted(true);
+        fileChooserButton.setFocusPainted(false);
+        fileChooserButton.setContentAreaFilled(true);
+        fileChooserButton.setBackground(Color.WHITE);
+        fileChooserButton.setForeground(Color.BLACK);
+        fileChooserButton.setBorder(compound);
+         //set up constraints
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.gridwidth = 3;
+        
+        this.add(fileChooserButton, constraints);
+        fileChooserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fileChooser = new JFileChooser("C:\\Users\\pc\\Documents\\", FileSystemView.getFileSystemView());
+                int r = fileChooser.showSaveDialog(null);
+ 
+            // if the user selects a file
+            if (r == JFileChooser.APPROVE_OPTION){
+                // set the label to the path of the selected file
+                myTask.changeImage(fileChooser.getSelectedFile().getAbsolutePath()); 
+            }
+                
+            }
+        });
+        
+    }
+    
     //stopSetUp
     private void convoluterSetUp() {
         setConvolutionList();
@@ -135,11 +170,18 @@ public class ControlPanel extends JPanel implements ActionListener {
         convolutionMenu.add(i4);
         convolutionMenu.add(i5);
         convolutionMenu.add(i6);
+        convolutionMenu.setForeground(Color.BLACK);
+
+
         convolutionMenuBar.add(convolutionMenu);
+        convolutionMenuBar.setBorderPainted(true);
+        convolutionMenuBar.setBackground(Color.WHITE);
+        convolutionMenuBar.setForeground(Color.BLACK);
+        convolutionMenuBar.setBorder(compound);
 
         //set up constraints
         constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         constraints.weightx = 1;
         constraints.weighty = 1;
         constraints.gridwidth = 3;
@@ -185,9 +227,9 @@ public class ControlPanel extends JPanel implements ActionListener {
         colorChooserLabel.setForeground(Color.white);
         //set up constraints
         cLabel.gridx = 0;
-        cLabel.gridy = 2;
+        cLabel.gridy = 3;
         cLabel.weightx = 0.1;
-        cLabel.weighty = 0.2;
+        cLabel.weighty = 0;
         cLabel.gridwidth = 3;
         this.add(colorChooserLabel, cLabel);
         
@@ -199,7 +241,7 @@ public class ControlPanel extends JPanel implements ActionListener {
         
         //set up constraints
         cCheckBox.gridx = 0;
-        cCheckBox.gridy = 3;
+        cCheckBox.gridy = 4;
         cCheckBox.weightx = 0.1;
         cCheckBox.weighty = 0.3;
         this.add(redCheckbox, cCheckBox);
@@ -251,5 +293,7 @@ public class ControlPanel extends JPanel implements ActionListener {
             }
         });
     }
+
+    
 
 }

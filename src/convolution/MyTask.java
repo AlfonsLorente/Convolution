@@ -31,7 +31,8 @@ public class MyTask extends JFrame {
     private ControlPanel controlPanel;
     private Convolution.Type convType = Convolution.Type.EMBOSS;
     private boolean redState = true, greenState = true, blueState = true;
-    Thread viewerThread;
+    private Thread viewerThread;
+    private String imageSrc = "IMG/taking_photo.png";
     
     public static void main(String[] args) {
         new MyTask();
@@ -52,7 +53,12 @@ public class MyTask extends JFrame {
         
     }
 
+    public void setImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
+    }
 
+
+    
     public Viewer getViewer() {
         return viewer;
     }
@@ -61,9 +67,9 @@ public class MyTask extends JFrame {
         this.setTitle("ConvolutionTransform");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new GridBagLayout());
-        this.setBounds(0, 0, 1360, 790);
-        this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        //this.setResizable(false);        
+        this.setBounds(0, 0, 1550, 850);
+        //this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        this.setResizable(false);        
 
     }
 
@@ -77,7 +83,7 @@ public class MyTask extends JFrame {
 
     private void setUpImages() {
         try {
-            image = ImageIO.read(new File("IMG/taking_photo.png"));
+            image = ImageIO.read(new File(imageSrc));
         } catch (IOException ex) {
             Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -113,6 +119,14 @@ public class MyTask extends JFrame {
         viewer.setConvolutedImage(convolutedImage);
 
     }
+    
+    public void changeImage(String imageSrc){
+        this.imageSrc = imageSrc;
+        setUpImages();
+        viewer.setImage(image);
+        viewer.setConvolutedImage(convolutedImage);
+        
+    }
 
     private void addViewer() {
         GridBagConstraints constraints = new GridBagConstraints();
@@ -143,5 +157,8 @@ public class MyTask extends JFrame {
         viewer.setImage(image);
         viewer.setConvolutedImage(convolutedImage);
     }
+    
+    
+    
 
 }
