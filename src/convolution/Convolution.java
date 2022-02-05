@@ -189,10 +189,10 @@ public class Convolution{
     private void fillColorLists() {
          for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
-                redList[i][j] = new Color(image.getRGB(i, j)).getRed();
-                greenList[i][j] = new Color(image.getRGB(i, j)).getGreen();
-                blueList[i][j] = new Color(image.getRGB(i, j)).getBlue();
-                alphaList[i][j] = new Color(image.getRGB(i, j)).getAlpha();
+                redList[i][j] = new Color(image.getRGB(i, j), true).getRed();
+                greenList[i][j] = new Color(image.getRGB(i, j), true).getGreen();
+                blueList[i][j] = new Color(image.getRGB(i, j), true).getBlue();
+                alphaList[i][j] = new Color(image.getRGB(i, j), true).getAlpha();
 
 
             }
