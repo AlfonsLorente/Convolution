@@ -33,7 +33,9 @@ public class MyTask extends JFrame {
     private boolean redState = true, greenState = true, blueState = true;
     private Thread viewerThread;
     private String imageSrc = "IMG/taking_photo.png";
-    
+    private float[][] kernel = new float[3][3];
+    private float kernelDiv = 1;
+
     public static void main(String[] args) {
         new MyTask();
     }
@@ -49,16 +51,13 @@ public class MyTask extends JFrame {
         viewerThread = new Thread(viewer);
         viewerThread.start();
         this.setVisible(true);
-        
-        
+
     }
 
     public void setImageSrc(String imageSrc) {
         this.imageSrc = imageSrc;
     }
 
-
-    
     public Viewer getViewer() {
         return viewer;
     }
@@ -69,7 +68,7 @@ public class MyTask extends JFrame {
         this.setLayout(new GridBagLayout());
         this.setBounds(0, 0, 1550, 850);
         //this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        this.setResizable(false);        
+        this.setResizable(false);
 
     }
 
@@ -87,7 +86,11 @@ public class MyTask extends JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        convolution = new Convolution(image, convType, redState, greenState, blueState);
+        if (convType.equals(Convolution.Type.PERSONALITZED)) {
+            convolution = new Convolution(image, redState, greenState, blueState, kernel, kernelDiv);
+        } else {
+            convolution = new Convolution(image, convType, redState, greenState, blueState);
+        }
         convolutedImage = convolution.getConvolutedImage();
 
     }
@@ -95,37 +98,45 @@ public class MyTask extends JFrame {
     public void changeConvolutedImage(Convolution.Type newType) {
         if (!convType.equals(newType)) {
             convType = newType;
-            convolution = new Convolution(image, convType, redState, greenState, blueState);
+            if (convType.equals(Convolution.Type.PERSONALITZED)) {
+                convolution = new Convolution(image, redState, greenState, blueState, kernel, kernelDiv);
+
+            } else {
+                convolution = new Convolution(image, convType, redState, greenState, blueState);
+
+            }
             convolutedImage = convolution.getConvolutedImage();
             viewer.setConvolutedImage(convolutedImage);
 
         }
     }
-    
-    public void changeConvolutedImage(String colorName , boolean colorState) {
-        if(colorName.equals("red")){
+
+    public void changeConvolutedImage(String colorName, boolean colorState) {
+        if (colorName.equals("red")) {
             redState = colorState;
-        }
-        else if(colorName.equals("green")){
+        } else if (colorName.equals("green")) {
             greenState = colorState;
-        }else if(colorName.equals("blue")){
+        } else if (colorName.equals("blue")) {
             blueState = colorState;
         }
-            
-        convolution = new Convolution(image, convType, redState, greenState, blueState);        
-        convolutedImage = convolution.getConvolutedImage();
-        convolution = new Convolution(image, convType, redState, greenState, blueState);
+
+        if (convType.equals(Convolution.Type.PERSONALITZED)) {
+            convolution = new Convolution(image, redState, greenState, blueState, kernel, kernelDiv);
+        } else {
+            convolution = new Convolution(image, convType, redState, greenState, blueState);
+
+        }
         convolutedImage = convolution.getConvolutedImage();
         viewer.setConvolutedImage(convolutedImage);
 
     }
-    
-    public void changeImage(String imageSrc){
+
+    public void changeImage(String imageSrc) {
         this.imageSrc = imageSrc;
         setUpImages();
         viewer.setImage(image);
         viewer.setConvolutedImage(convolutedImage);
-        
+
     }
 
     private void addViewer() {
@@ -157,8 +168,15 @@ public class MyTask extends JFrame {
         viewer.setImage(image);
         viewer.setConvolutedImage(convolutedImage);
     }
-    
-    
-    
+
+    void changeConvolutionKernel(float[][] kernel, float div) {
+
+        this.convType = Convolution.Type.PERSONALITZED;
+        this.kernel = kernel;
+        this.kernelDiv = div;
+        convolution = new Convolution(image, redState, greenState, blueState, kernel, div);
+        convolutedImage = convolution.getConvolutedImage();
+        viewer.setConvolutedImage(convolutedImage);
+    }
 
 }
