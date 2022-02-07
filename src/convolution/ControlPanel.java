@@ -264,7 +264,7 @@ public class ControlPanel extends JPanel implements ActionListener {
     //setConvolutionList: Adds the menu of convolution types
     private void setConvolutionList() {
         GridBagConstraints constraints = new GridBagConstraints();
-        convolutionMenu = new JMenu("Convolution type");
+        convolutionMenu = new JMenu("Done filters");
         i1 = new JMenuItem("Sharpen");
         i2 = new JMenuItem("Smooth");
         i3 = new JMenuItem("Raise");
