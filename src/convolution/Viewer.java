@@ -98,6 +98,7 @@ public class Viewer extends Canvas implements Runnable{
         while(true){
             try {
                 Thread.sleep(100);
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
         }
